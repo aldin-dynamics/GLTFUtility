@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Scripting;
 
@@ -15,15 +16,8 @@ namespace Siccity.GLTFUtility {
 		/// <summary> Morph target weights </summary>
 		public List<float> weights;
 		public string name;
-		public Extras extras;
-
-		public class Extras {
-			/// <summary>
-			/// Morph target names. Not part of the official spec, but pretty much a standard.
-			/// Discussed here https://github.com/KhronosGroup/glTF/issues/1036
-			/// </summary>
-			public string[] targetNames;
-		}
+		public JObject extras;
+		
 #endregion
 
 #region Import
@@ -197,9 +191,10 @@ namespace Siccity.GLTFUtility {
 							}
 						}
 
-						bool hasTargetNames = gltfMesh.extras != null && gltfMesh.extras.targetNames != null;
+						var targetNames = (JArray) gltfMesh.extras?["targetNames"];
+						bool hasTargetNames = targetNames != null;
 						if (hasTargetNames) {
-							if (gltfMesh.primitives.All(x => x.targets.Count != gltfMesh.extras.targetNames.Length)) {
+							if (gltfMesh.primitives.All(x => x.targets.Count != targetNames.Count)) {
 								Debug.LogWarning("Morph target names found in mesh " + name + " but array length does not match primitive morph target array length");
 								hasTargetNames = false;
 							}
@@ -215,7 +210,7 @@ namespace Siccity.GLTFUtility {
 									blendShape.pos = GetMorphWeights(primitive.targets[k].POSITION, submeshVertexStart[i], finalVertCount, accessors);
 									blendShape.norm = GetMorphWeights(primitive.targets[k].NORMAL, submeshVertexStart[i], finalVertCount, accessors);
 									blendShape.tan = GetMorphWeights(primitive.targets[k].TANGENT, submeshVertexStart[i], finalVertCount, accessors);
-									if (hasTargetNames) blendShape.name = gltfMesh.extras.targetNames[k];
+									if (hasTargetNames) blendShape.name = (string) targetNames[k];
 									else blendShape.name = "morph-" + blendShapes.Count;
 									blendShapes.Add(blendShape);
 								}
