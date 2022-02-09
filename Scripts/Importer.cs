@@ -271,7 +271,7 @@ namespace Siccity.GLTFUtility {
 					}
 				}
 
-				importSettings.extrasProcessor.ProcessExtras(gameObject, animations, gltfObject.extras);
+				importSettings.extrasProcessor.ProcessExtras(gameObject, animations, gltfObject);
 			}
 			return gameObject;
 		}
