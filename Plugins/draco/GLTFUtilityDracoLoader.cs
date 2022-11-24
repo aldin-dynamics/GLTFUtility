@@ -100,7 +100,7 @@ public unsafe class GLTFUtilityDracoLoader {
 
 #if !UNITY_EDITOR && (UNITY_WEBGL || UNITY_IOS)
         const string DRACODEC_UNITY_LIB = "__Internal";
-#elif UNITY_ANDROID || UNITY_STANDALONE || UNITY_WSA || UNITY_EDITOR || PLATFORM_LUMIN
+#elif UNITY_ANDROID || UNITY_STANDALONE || UNITY_WSA || UNITY_EDITOR || PLATFORM_LUMIN || UNITY_PS5
 	const string DRACODEC_UNITY_LIB = "dracodec_unity";
 #endif
 
